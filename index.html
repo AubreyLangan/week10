@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<form>
+    <div class="mb-3">
+        <label for="accountCode" class="form-label">Account Code:</label>
+        <input type="text" class="form-control" id="exampleAccountCode" aria-describedby="accountCodeHelp">
+        <div id="exampleAccountCode" class="form-text">Please enter a valid account code.</div>
+    </div>
+    <div class="mb-3">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" class="form-control" id="exampleUsername" aria-describedby="usernameHelp">
+        <div id="exampleUsername" class="form-text">Please enter a valid username.</div>
+    </div>
+    <div class="mb-3">
+        <label for="examplePassword" class="form-label">Password:</label>
+        <input type="password" class="form-control" id="examplePassword" aria-describedby="passwordHelp">
+        <div id="passwordHelp" class="form-text">Please enter a strong password.</div>
+    </div>
+    <div class="mb-3">
+        <label for="asset" class="form-label">Asset:</label>
+        <input type="text" class="form-control" id="exampleAsset" aria-describedby="assetHelp">
+        <div id="exampleAsset" class="form-text">Please enter a valid asset.</div>
+    </div>
+    <div class="mb-3">
+        <label for="startTimeEpoch" class="form-label">Start Time in Epoch:</label>
+        <input type="text" class="form-control" id="startTimeEpoch" aria-describedby="startTimeEpochHelp">
+        <div id="startTimeEpochHelp" class="form-text">Enter the start time in Epoch format (e.g., 1633713600).</div>
+    </div>
+    <div class="mb-3">
+        <label for="endTimeEpoch" class="form-label">End Time in Epoch:</label>
+        <input type="text" class="form-control" id="endTimeEpoch" aria-describedby="endTimeEpochHelp">
+        <div id="endTimeEpochHelp" class="form-text">Enter the end time in Epoch format (e.g., 1633713600).</div>
+    </div>
+    <button type="button" class="btn btn-primary" id="logButton">Log</button>
+</form>
+<script>
+    document.getElementById('logButton').addEventListener('click', function() {
+        let accountCode = document.getElementById('exampleAccountCode').value;
+        let username = document.getElementById('exampleUsername').value;
+        let password = document.getElementById('examplePassword').value;
+        let asset = document.getElementById('exampleAsset').value;
+        let startTimeEpoch = document.getElementById('startTimeEpoch').value;
+        let endTimeEpoch = document.getElementById('endTimeEpoch').value;
+
+        if(accountCode === '' || username === '' || password === '' || asset === '') {
+            alert('Please fill in all required fields');
+        } else {
+            if (accountCode === '') {
+                alert('Please enter a valid account code.');
+                return;
+            }
+            if (username === '') {
+                alert('Please enter a valid username.');
+                return;
+            }
+            if (password === '') {
+                alert('Please enter a strong password.');
+                return;
+            }
+            if (!isValidEpoch(startTimeEpoch) || !isValidEpoch(endTimeEpoch)) {
+                alert('Please enter valid Epoch Timestamps.');
+                return;
+            }
+
+            let table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            let newRow = table.insertRow(table.rows.length);
+
+            let cell1 = newRow.insertCell(0);
+            cell1.innerHTML = accountCode;
+            let cell2 = newRow.insertCell(1);
+            cell2.innerHTML = username;
+            let cell3 = newRow.insertCell(2);
+            cell3.innerHTML = password;
+            let cell4 = newRow.insertCell(3);
+            cell4.innerHTML = asset;
+            let cell5 = newRow.insertCell(4);
+            cell5.innerHTML = startTimeEpoch;
+            let cell6 = newRow.insertCell(5);
+            cell6.innerHTML = endTimeEpoch;
+
+            document.getElementById('exampleAccountCode').value = '';
+            document.getElementById('exampleUsername').value = '';
+            document.getElementById('examplePassword').value = '';
+            document.getElementById('exampleAsset').value = '';
+            document.getElementById('startTimeEpoch').value = '';
+            document.getElementById('endTimeEpoch').value = '';
+
+            alert('Form data added to the table!');
+        }
+
+    });
+    function isValidEpoch(value) {
+        if (value === null || value === undefined) {
+            return false;
+        }
+        const timestamp = parseInt(value, 10);
+        return !isNaN(timestamp) && timestamp >= 0;
+    }
+</script>
+<form>
+    <div class="mb-3">
+        <label for="formattedDate" class="form-label">Formatted Date:</label>
+        <input type="text" class="form-control" id="formattedDate">
+    </div>
+    <div class="mb-3">
+        <label for="epochTimestamp" class="form-label">Epoch Timestamp:</label>
+        <input type="text" class="form-control" id="epochTimestamp">
+    </div>
+    <button type="button" class="btn btn-primary" onclick="convertDateToEpoch()">Convert</button>
+</form>
+<script>
+    function convertDateToEpoch() {
+        let dateInput = document.getElementById('formattedDate').value;
+
+        if (isValidDate(dateInput)) {
+            let epochTime = Date.parse(dateInput) / 1000;
+            document.getElementById('epochTimestamp').value = epochTime;
+        } else {
+            alert('Invalid Date Format');
+        }
+
+     }
+
+     function isValidDate(dateString) {
+        let regEx = /^\d{4}-\d{2}-\d{2}$/;
+        return regEx.test(dateString) && !isNaN(Date.parse(dateString));
+     }
+</script>
+<div class="container mt-4">
+<table id="dataTable" class="table table-info">
+    <h3>Mock API Calls</h3>
+    <thead>
+        <tr>
+            <th scope="col">Account Code</th>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+            <th scope="col">Asset</th>
+            <th scope="col">Start Time Epoch</th>
+            <th scope="col">End Time Epoch</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+           <th scope="row">100</th>
+           <td>test</td>
+           <td>test1</td>
+           <td>1</td>
+           <td>1633713600</td>
+           <td>1633713620</td>  
+        </tr>
+        <tr>
+            <th scope="row">116</th>
+            <td>test2</td>
+            <td>test2</td>
+            <td>2</td>
+            <td>1633713600</td>
+            <td>1633713650</td>
+        </tr>
+    </tbody>
+</table>
+<button onclick="tableDataToUrl()">Convert to URL</button>
+<script>
+    function tableDataToUrl() {
+        console.log('Function is being executed.')
+        let table = document.getElementById('dataTable');
+        let rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        let url = 'https://omi.zonarsystems.net/?';
+
+        for (let i = 0; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName('td');
+            let accountCode = cells[0].textContent;
+            let username = cells[1].textContent;
+            let password = cells[2].textContent;
+            let asset = cells[3].textContent;
+            let startTimeEpoch = cells[4].textContent;
+            let endTimeEpoch = document.getElementById('endTimeEpochHelp').textContent;
+
+            url += `accountCode=${accountCode}&username=${username}&password=${password}&asset=${asset}&startTimeEpoch=${startTimeEpoch}&endTimeEpoch=${endTimeEpoch}`;
+        }
+
+        if (url.endsWith('&')) {
+            url = url.slice(0, -1);
+        }
+        console.log(url)
+        window.open(url, '_blank');
+    }
+</script>
+</div>
+    <script> src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"; integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"; crossorigin="anonymous"</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="index.js"></script></script>
+</body>
+</html>
